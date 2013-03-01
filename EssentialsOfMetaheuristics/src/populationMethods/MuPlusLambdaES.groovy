@@ -3,7 +3,8 @@ import problems.OnesMax
 
 class MuPlusLambdaES {
 	Integer numParents = 2
-	Integer numChildren = 5
+	Integer numChildren = 6
+	Integer numTweaks = 1
 	def maximize(problem){
 		def individualArr = []
 
@@ -27,7 +28,11 @@ class MuPlusLambdaES {
                         
 			for (i in 0..<numParents) {
 				for (j in 0..<(numChildren / numParents)) {
-					individualArr.add(problem.tweak(problem.copy(individualArr.get(i))))
+					def problemToTweak = problem.copy(individualArr.get(i))
+					numTweaks.times {
+						problemToTweak = problem.tweak(problemToTweak)
+					}
+					individualArr.add(problemToTweak)
 				}
 			}
 
@@ -36,6 +41,6 @@ class MuPlusLambdaES {
 	}
 
 	String toString() {
-		"MuPlusLambdaES_" + numParents + "_" + numChildren
+		"MuPlusLambdaES_" + numParents + "_" + numChildren + "_" + numTweaks
 	}
 }
