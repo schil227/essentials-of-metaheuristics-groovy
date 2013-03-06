@@ -10,7 +10,7 @@ class FunctionNode {
 	}
 	
 	def eval(){
-		alistOfChildren.collect{node -> node.eval()}
-		return afunction.eval(alistOfChildren)
+		def tmpList = alistOfChildren.collect {node -> node.eval()}
+		return afunction.eval(tmpList)
 	}
 }
