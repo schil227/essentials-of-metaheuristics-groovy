@@ -9,8 +9,9 @@ class FunctionNode {
 		alistOfChildren = listOfChildren
 	}
 	
-	def eval(){
-		def tmpList = alistOfChildren.collect {node -> node.eval()}
+	def eval(hashMap){
+		println(afunction)
+		def tmpList = alistOfChildren.collect {node -> node.eval(hashMap)}
 		return afunction.eval(tmpList)
 	}
 }

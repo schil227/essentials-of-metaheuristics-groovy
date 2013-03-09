@@ -11,8 +11,7 @@ class TreeGP {
 	
 	static def generateRandomTree(setOfFunctions, setOfTerminals, maxDepth, method){
 		def expr
-		//println("before if")
-		if(maxDepth == 0 || (method == "grow" && rand.nextInt() < (setOfTerminals.size()/(setOfTerminals.size() + setOfFunctions.size()) ) )){
+		if(maxDepth == 0 || (method == "grow" && (rand.nextInt(10)/10.0) < (setOfTerminals.size()/(setOfTerminals.size() + setOfFunctions.size()) ) )){
 			//println("making a terminalNode")
 			expr = new TerminalNode(chooseRandomElement(setOfTerminals))
 			//println("made a terminalNode")
@@ -33,16 +32,17 @@ class TreeGP {
 	}
 	
 	public static main(args) {
-		def setOfFunctions = [new Add(), new Subtract(), new Multiply(), new Divide()]
-		//def x,y,z
-		def setOfTerminals = [1,2,3,4,5]
+		def setOfFunctions = [new Add(), new Subtract(), new Multiply(), new Divide(), new Add(), new Subtract(), new Multiply(), new Divide()]
+		def setOfTerminals = [1,2,3,4,5,'x','y','z']
 		
 		println("calling randElement")
 		chooseRandomElement(setOfTerminals)
 		println("Calling the method")
-		def tree = generateRandomTree(setOfFunctions, setOfTerminals, 2, "grow")
-		println("tree " + tree.eval())
+		def tree = generateRandomTree(setOfFunctions, setOfTerminals, 5, "grow")
+		def ran = rand.nextInt(10)
+		println("tree " + tree.eval(['x': 2, 'y':4, 'z': ran]))
 		println(setOfFunctions.get(0).arity)
+		
 	}
 	
 }
