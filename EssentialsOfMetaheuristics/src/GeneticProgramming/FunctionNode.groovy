@@ -1,17 +1,20 @@
 package GeneticProgramming
 
 class FunctionNode {
-	def afunction
-	def alistOfChildren
+	def function
+	def listOfChildren
+	def depth
 	
-	FunctionNode(function, listOfChildren){
-		afunction = function 
-		alistOfChildren = listOfChildren
+	FunctionNode(afunction, alistOfChildren, theDepth){
+		function = afunction 
+		listOfChildren = alistOfChildren
+		depth = theDepth
 	}
 	
 	def eval(hashMap){
-		println(afunction)
-		def tmpList = alistOfChildren.collect {node -> node.eval(hashMap)}
-		return afunction.eval(tmpList)
+		println(function)
+		println("the function depth is " + depth)
+		def tmpList = listOfChildren.collect {node -> node.eval(hashMap)}
+		return function.eval(tmpList)
 	}
 }

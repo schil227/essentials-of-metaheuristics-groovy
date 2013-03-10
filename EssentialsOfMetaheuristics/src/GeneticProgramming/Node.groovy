@@ -1,7 +1,0 @@
-package GeneticProgramming
-
-class Node {
-	
-	
-	
-}
