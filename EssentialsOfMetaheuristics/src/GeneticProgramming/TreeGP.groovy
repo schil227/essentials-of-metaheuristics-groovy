@@ -5,7 +5,7 @@ class TreeGP {
 	static Random rand = new Random()
 
 	static def chooseRandomElement(alist){
-		return alist.get(rand.nextInt(alist.size -1))
+		return alist.get(rand.nextInt(alist.size))
 	}
 
 	static def generateRandomTree(setOfFunctions, setOfTerminals, maxDepth, method){
@@ -58,54 +58,101 @@ class TreeGP {
 			} else {
 				funcNodeList.add(node)
 			}
-
-			if(funcNodeList.isEmpty){
+		}
+		
+		println("functionNodeList is " + funcNodeList)
+		println("functionNodeList's class is " + funcNodeList.class)
+		if(funcNodeList.isEmpty()){
+			println("funcNodeList is empty")
+			return chooseRandomElement(termNodeList)
+		} else if(termNodeList.isEmpty()){
+		println("termNodeList is empty")
+			return chooseRandomElement(funcNodeList)
+		} else {
+			println("Gonna randomly choose a list!")
+			if(rand.nextInt(10) == 0){
+				println("Chose the termNodeList of size " + termNodeList.size)
 				return chooseRandomElement(termNodeList)
-			} else if(termNodeList.isEmpty){
-				return chooseRandomElement(funcNodeList)
 			} else {
-				if(rand.nextInt(10) == 0){
-					return chooseRandomElement(termNodeList)
-				} else {
-					return chooseRandomElement(funcNodeList)
-				}
+			    println("Chose the funcNodeList of size " + funcNodeList.size)
+				return chooseRandomElement(funcNodeList)
 			}
+		}
+
+	}
+		
+	static def copyTree(node){
+		
+		if(node instanceof TerminalNode){
+			return node
+		}else{
+		  def newNode = node.clone()
+		  newNode.listOfChildren = []
+		  for(childNode in node.listOfChildren){
+			newNode.listOfChildren.add(copyTree(childNode))
+		  }
+		  return newNode
 		}
 	}
 
+	static def findReplaceNode(toNode, depth, fromNode){
+		if(toNode instanceof TerminalNode || (rand.nextInt(depth) == 0)){
+			println("replacing " + toNode + " with " + fromNode)
+			toNode = fromNode
+		}else{
+			findReplaceNode(chooseRandomNode(toNode.listOfChildren), depth,fromNode)
+		}
+	}
+	
 	static def crossoverTrees(firstTree, secondTree){
 		def node = secondTree
-		def treeDepth = node.depth - 1
+		def treeDepth = node.depth
 		def nodeNotFound = true
 		while(nodeNotFound){
-			if(node.class == TerminalNode || (rand.nextInt(treeDepth) == 0)){
+			def tmpRand = rand.nextInt(treeDepth)
+			if(node instanceof TerminalNode || (tmpRand == 0)){
+				println("the tmpRand = " + tmpRand)
+				println("The tree depth is: " + treeDepth)
+				println("We found the spot!")
 				nodeNotFound = false
 			} else {
+				println("we're going deeper!")
 				node = chooseRandomNode(node.listOfChildren)
 			}
 		}
+		nodeNotFound = true
+		def toNode = copyTree(firstTree)
+		findReplaceNode(toNode, toNode.depth - 1,node)
+		return toNode
 	}
 
-		public static main(args) {
-			def setOfFunctions = [
-				new Add(),
-				new Subtract(),
-				new Multiply(),
-				new Divide(),
-				new Add(),
-				new Subtract(),
-				new Multiply(),
-				new Divide()
-			]
-			def setOfTerminals = [1, 2, 3, 4, 5, 'x', 'y', 'z']
+	public static main(args) {
+		def setOfFunctions = [
+			new Add(),
+			new Subtract(),
+			new Multiply(),
+			new Divide(),
+			new Add(),
+			new Subtract(),
+			new Multiply(),
+			new Divide()
+		]
+		def setOfTerminals = [1, 2, 3, 4, 5, 'x', 'y', 'z']
 
-			println("calling randElement")
-			chooseRandomElement(setOfTerminals)
-			println("Calling the method")
-			def tree = generateRandomTree(setOfFunctions, setOfTerminals, 5, "grow")
-			println("the depth of the tree is " + tree.depth )
-			def ran = rand.nextInt(10)
-			println("tree " + tree.eval(['x': 2, 'y':4, 'z': ran]))
-			println(setOfFunctions.get(0).arity)
-		}
+		println("calling randElement")
+		chooseRandomElement(setOfTerminals)
+		println("Calling tree1")
+		def tree = generateRandomTree(setOfFunctions, setOfTerminals, 2, "growd")
+		println("tree 1 evaluates to : " + tree.eval(['x': 2, 'y':4, 'z': 5]))
+		println()
+		println("Calling tree2")
+		def tree2 = generateRandomTree(setOfFunctions, setOfTerminals, 2, "growd")
+		println("tree 2 evaluates to : " + tree2.eval(['x': 2, 'y':4, 'z': 5]))
+		println()
+		println("Calling tree3")
+		def tree3 = crossoverTrees(tree, tree2)
+		println()
+		println("tree 3 evaluates to : " + tree3.eval(['x': 2, 'y':4, 'z': 5]))
+		
 	}
+}

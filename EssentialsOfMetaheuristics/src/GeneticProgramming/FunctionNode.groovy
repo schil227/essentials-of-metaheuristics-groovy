@@ -1,6 +1,6 @@
 package GeneticProgramming
 
-class FunctionNode {
+class FunctionNode implements Cloneable {
 	def function
 	def listOfChildren
 	def depth
