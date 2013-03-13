@@ -1,5 +1,7 @@
 package GeneticProgramming
 
+import java.util.prefs.AbstractPreferences.NodeAddedEvent;
+
 class TreeGP {
 
 	static Random rand = new Random()
@@ -59,14 +61,14 @@ class TreeGP {
 				funcNodeList.add(node)
 			}
 		}
-		
+
 		println("functionNodeList is " + funcNodeList)
 		println("functionNodeList's class is " + funcNodeList.class)
 		if(funcNodeList.isEmpty()){
 			println("funcNodeList is empty")
 			return chooseRandomElement(termNodeList)
 		} else if(termNodeList.isEmpty()){
-		println("termNodeList is empty")
+			println("termNodeList is empty")
 			return chooseRandomElement(funcNodeList)
 		} else {
 			println("Gonna randomly choose a list!")
@@ -74,36 +76,62 @@ class TreeGP {
 				println("Chose the termNodeList of size " + termNodeList.size)
 				return chooseRandomElement(termNodeList)
 			} else {
-			    println("Chose the funcNodeList of size " + funcNodeList.size)
+				println("Chose the funcNodeList of size " + funcNodeList.size)
 				return chooseRandomElement(funcNodeList)
 			}
 		}
 
 	}
-		
+
 	static def copyTree(node){
-		
+
 		if(node instanceof TerminalNode){
 			return node
 		}else{
-		  def newNode = node.clone()
-		  newNode.listOfChildren = []
-		  for(childNode in node.listOfChildren){
-			newNode.listOfChildren.add(copyTree(childNode))
-		  }
-		  return newNode
+			def newNode = node.clone()
+			newNode.listOfChildren = []
+			for(childNode in node.listOfChildren){
+				newNode.listOfChildren.add(copyTree(childNode))
+			}
+			return newNode
 		}
 	}
 
-	static def findReplaceNode(toNode, depth, fromNode){
+	static def findReplaceNode(toNode, parentNode, depth, fromNode){
 		if(toNode instanceof TerminalNode || (rand.nextInt(depth) == 0)){
-			println("replacing " + toNode + " with " + fromNode)
-			toNode = fromNode
+			if(parentNode instanceof DummyNode){
+				println("replacing the first node in the tree")
+				parentNode.child = fromNode
+			}else{
+				println("replacing " + toNode + " with " + fromNode)
+				parentNode.listOfChildren.remove(toNode)
+				parentNode.listOfChildren.add(fromNode)
+				toNode = fromNode
+			}
 		}else{
-			findReplaceNode(chooseRandomNode(toNode.listOfChildren), depth,fromNode)
+			findReplaceNode(chooseRandomNode(toNode.listOfChildren), toNode,depth,fromNode)
 		}
 	}
-	
+
+	static def calculateDepth(node,depth, oldDepth){
+		if(node instanceof TerminalNode){
+			depth += 1
+			if(depth > oldDepth){
+				oldDepth = depth
+			}
+			return oldDepth
+		}else{
+			for(child in node.listOfChildren){
+				def childDepth = calculateDepth(child,depth + 1,oldDepth)
+				if(childDepth > oldDepth){
+					oldDepth = childDepth
+				}
+				child
+			}
+			return oldDepth
+		}
+	}
+
 	static def crossoverTrees(firstTree, secondTree){
 		def node = secondTree
 		def treeDepth = node.depth
@@ -122,7 +150,14 @@ class TreeGP {
 		}
 		nodeNotFound = true
 		def toNode = copyTree(firstTree)
-		findReplaceNode(toNode, toNode.depth - 1,node)
+		def dummyNode = new DummyNode(null)
+		findReplaceNode(toNode, dummyNode, toNode.depth - 1,node)
+		if(dummyNode.child != null){
+			toNode = dummyNode.child
+		}
+
+		toNode.depth = calculateDepth(toNode,0,0)
+		println("toNode's max depth is " + toNode.depth)
 		return toNode
 	}
 
@@ -153,6 +188,6 @@ class TreeGP {
 		def tree3 = crossoverTrees(tree, tree2)
 		println()
 		println("tree 3 evaluates to : " + tree3.eval(['x': 2, 'y':4, 'z': 5]))
-		
+
 	}
 }
