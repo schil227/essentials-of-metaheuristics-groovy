@@ -12,6 +12,7 @@ class FunctionNode implements Cloneable {
 	}
 	
 	def eval(hashMap){
+		println("the hashMap is " + hashMap)
 		println(function)
 		println("the function depth is " + depth)
 		def tmpList = listOfChildren.collect {node -> node.eval(hashMap)}

@@ -160,6 +160,25 @@ class TreeGP {
 		println("toNode's max depth is " + toNode.depth)
 		return toNode
 	}
+	
+	static def evaluateTree(tree,problemPairngs,hashVar){
+		def fitness = 0
+		//[0:1, 1:2, 2:3],['x']
+		def varValues = []
+		def probValues = []
+		problemPairngs.each {key, value -> varValues.add(key)
+									probValues.add(value)}
+		println("the problem pairings are : " + problemPairngs)
+		println("the variable hasing are : ") 
+		problemPairngs.each { key, value -> 
+			def varAssignments = [:]
+			varAssignments[hashVar.get(0)] = key
+			println("key (${key}, ${value}) " + varAssignments)
+			fitness += Math.abs(value - tree.eval(varAssignments))
+		}
+		
+		return fitness
+	}
 
 	public static main(args) {
 		def setOfFunctions = [
@@ -172,22 +191,32 @@ class TreeGP {
 			new Multiply(),
 			new Divide()
 		]
-		def setOfTerminals = [1, 2, 3, 4, 5, 'x', 'y', 'z']
+		def setOfTerminals = [1, 2, 3, 4, 5, 'x']
 
 		println("calling randElement")
 		chooseRandomElement(setOfTerminals)
 		println("Calling tree1")
 		def tree = generateRandomTree(setOfFunctions, setOfTerminals, 2, "growd")
-		println("tree 1 evaluates to : " + tree.eval(['x': 2, 'y':4, 'z': 5]))
+		println("tree 1 evaluates to : " + tree.eval(['x': 2]))//, 'y':4, 'z': 5]))
 		println()
 		println("Calling tree2")
 		def tree2 = generateRandomTree(setOfFunctions, setOfTerminals, 2, "growd")
-		println("tree 2 evaluates to : " + tree2.eval(['x': 2, 'y':4, 'z': 5]))
+		println("tree 2 evaluates to : " + tree2.eval(['x': 2]))//, 'y':4, 'z': 5]))
 		println()
 		println("Calling tree3")
 		def tree3 = crossoverTrees(tree, tree2)
 		println()
-		println("tree 3 evaluates to : " + tree3.eval(['x': 2, 'y':4, 'z': 5]))
+		println("tree 3 evaluates to : " + tree3.eval(['x': 2]))//, 'y':4, 'z': 5]))
+		
+		println()
+		
+		println("the fittness is " + evaluateTree(tree3,[0:1, 1:2, 2:3],['x']) )
+		
+		for(i in 0 .. 20){
+			println(Math.sin(i))
+		}
 
+		//println([[1, 2]: 1, [1, 2]: 2].each {k,v -> println "$k"})
+		//println(hashMap)
 	}
 }
