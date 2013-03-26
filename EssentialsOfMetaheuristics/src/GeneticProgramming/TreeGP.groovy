@@ -4,6 +4,14 @@ import java.util.prefs.AbstractPreferences.NodeAddedEvent;
 
 class TreeGP {
 
+	//These values are used in the standard 'problem' class, which TreeGP will use
+	static Integer evalCount = 0
+	Integer maxIterations = 1000
+	
+	def terminate = { a, q = quality(a) ->
+		evalCount >= maxIterations
+	}
+	
 	static Random rand = new Random()
 
 	static def chooseRandomElement(alist){
@@ -13,7 +21,12 @@ class TreeGP {
 	static def generateRandomTree(setOfFunctions, setOfTerminals, maxDepth, method){
 		return generateRandomTreeRecur(setOfFunctions, setOfTerminals, maxDepth, method, 0, 0).getAt(0)
 	}
-
+	
+	static def outputInfo = false
+	
+	def toggleOutput(){
+		outputInfo = !outputInfo
+	}
 
 	static def generateRandomTreeRecur(setOfFunctions, setOfTerminals, maxDepth, method, depthSize, oldDepthSize){
 		def expr
@@ -62,21 +75,21 @@ class TreeGP {
 			}
 		}
 
-		println("functionNodeList is " + funcNodeList)
-		println("functionNodeList's class is " + funcNodeList.class)
+	//	println("functionNodeList is " + funcNodeList)
+	//	println("functionNodeList's class is " + funcNodeList.class)
 		if(funcNodeList.isEmpty()){
-			println("funcNodeList is empty")
+	//		println("funcNodeList is empty")
 			return chooseRandomElement(termNodeList)
 		} else if(termNodeList.isEmpty()){
-			println("termNodeList is empty")
+	//		println("termNodeList is empty")
 			return chooseRandomElement(funcNodeList)
 		} else {
-			println("Gonna randomly choose a list!")
+	//		println("Gonna randomly choose a list!")
 			if(rand.nextInt(10) == 0){
-				println("Chose the termNodeList of size " + termNodeList.size)
+	//			println("Chose the termNodeList of size " + termNodeList.size)
 				return chooseRandomElement(termNodeList)
 			} else {
-				println("Chose the funcNodeList of size " + funcNodeList.size)
+	//			println("Chose the funcNodeList of size " + funcNodeList.size)
 				return chooseRandomElement(funcNodeList)
 			}
 		}
@@ -100,10 +113,10 @@ class TreeGP {
 	static def findReplaceNode(toNode, parentNode, depth, fromNode){
 		if(toNode instanceof TerminalNode || (rand.nextInt(depth) == 0)){
 			if(parentNode instanceof DummyNode){
-				println("replacing the first node in the tree")
+		//		println("replacing the first node in the tree")
 				parentNode.child = fromNode
 			}else{
-				println("replacing " + toNode + " with " + fromNode)
+		//		println("replacing " + toNode + " with " + fromNode)
 				parentNode.listOfChildren.remove(toNode)
 				parentNode.listOfChildren.add(fromNode)
 				toNode = fromNode
@@ -139,12 +152,12 @@ class TreeGP {
 		while(nodeNotFound){
 			def tmpRand = rand.nextInt(treeDepth)
 			if(node instanceof TerminalNode || (tmpRand == 0)){
-				println("the tmpRand = " + tmpRand)
-				println("The tree depth is: " + treeDepth)
-				println("We found the spot!")
+		//		println("the tmpRand = " + tmpRand)
+		//		println("The tree depth is: " + treeDepth)
+		//		println("We found the spot!")
 				nodeNotFound = false
 			} else {
-				println("we're going deeper!")
+		//		println("we're going deeper!")
 				node = chooseRandomNode(node.listOfChildren)
 			}
 		}
@@ -157,24 +170,25 @@ class TreeGP {
 		}
 
 		toNode.depth = calculateDepth(toNode,0,0)
-		println("toNode's max depth is " + toNode.depth)
+	//	println("toNode's max depth is " + toNode.depth)
 		return toNode
 	}
 	
 	static def evaluateTree(tree,problemPairngs,hashVar){
+		evalCount += 1
 		def fitness = 0
 		//[0:1, 1:2, 2:3],['x']
 		def varValues = []
 		def probValues = []
 		problemPairngs.each {key, value -> varValues.add(key)
 									probValues.add(value)}
-		println("the problem pairings are : " + problemPairngs)
-		println("the variable hasing are : ") 
+	//	println("the problem pairings are : " + problemPairngs)
+	//	println("the variable hasing are : ") 
 		problemPairngs.each { key, value -> 
 			def varAssignments = [:]
 			varAssignments[hashVar.get(0)] = key
-			println("key (${key}, ${value}) " + varAssignments)
-			fitness += Math.abs(value - tree.eval(varAssignments))
+		//	println("key (${key}, ${value}) " + varAssignments)
+			fitness += Math.abs(value - tree.eval(varAssignments, outputInfo))
 		}
 		
 		return fitness

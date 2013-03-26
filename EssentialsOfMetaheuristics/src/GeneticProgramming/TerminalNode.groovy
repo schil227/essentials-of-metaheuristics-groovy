@@ -9,9 +9,12 @@ class TerminalNode {
 		
 	}
 
-	def eval(hashMap){
-		println("the terminal node's value is " + terminal)
-		println("the depth is " + depth)
+	def eval(hashMap, outputInfo){
+		if(outputInfo){
+			println("the terminal node's value is " + terminal)
+		}
+		
+	//	println("the depth is " + depth)
 		if(terminal.class == String){
 			return hashMap[terminal]
 		}else{
