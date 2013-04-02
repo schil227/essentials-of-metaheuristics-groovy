@@ -23,8 +23,13 @@ class TreeGP {
 	}
 	
 	static def outputInfo = false
+	static def outputCompare = false
 	
 	def toggleOutput(){
+		outputInfo = !outputInfo
+	}
+	
+	def toggleOutputCompare(){
 		outputInfo = !outputInfo
 	}
 
@@ -188,7 +193,21 @@ class TreeGP {
 			def varAssignments = [:]
 			varAssignments[hashVar.get(0)] = key
 		//	println("key (${key}, ${value}) " + varAssignments)
-			fitness += Math.abs(value - tree.eval(varAssignments, outputInfo))
+			
+			//VERY BAD WORK AROUND TO LOOK AT INPUT REMOVE WHEN DEBUGGING IS DONE
+			def treeOutcome
+			if(key == 0){
+			  treeOutcome = tree.eval(varAssignments, outputInfo)
+			}else{
+			  treeOutcome = tree.eval(varAssignments, false)
+			}
+			if(tree instanceof TerminalNode || calculateDepth(tree,0,0) > 14){
+				treeOutcome = 9999999
+			}
+			fitness += Math.abs(value - treeOutcome)
+			if(outputCompare){
+			  println("value: " + value + " actual: " + treeOutcome)
+			}
 		}
 		
 		return fitness
@@ -210,25 +229,27 @@ class TreeGP {
 		println("calling randElement")
 		chooseRandomElement(setOfTerminals)
 		println("Calling tree1")
-		def tree = generateRandomTree(setOfFunctions, setOfTerminals, 2, "growd")
-		println("tree 1 evaluates to : " + tree.eval(['x': 2]))//, 'y':4, 'z': 5]))
+		def tree = generateRandomTree(setOfFunctions, setOfTerminals, 3, "growd")
+		println("tree 1 evaluates to : " + tree.eval(['x': 2], true))//, 'y':4, 'z': 5]))
 		println()
 		println("Calling tree2")
-		def tree2 = generateRandomTree(setOfFunctions, setOfTerminals, 2, "growd")
-		println("tree 2 evaluates to : " + tree2.eval(['x': 2]))//, 'y':4, 'z': 5]))
+		def tree2 = generateRandomTree(setOfFunctions, setOfTerminals, 3, "growd")
+		println("tree 2 evaluates to : " + tree2.eval(['x': 2], true))//, 'y':4, 'z': 5]))
 		println()
 		println("Calling tree3")
 		def tree3 = crossoverTrees(tree, tree2)
 		println()
-		println("tree 3 evaluates to : " + tree3.eval(['x': 2]))//, 'y':4, 'z': 5]))
-		
+		println("tree 3 evaluates to : " + tree3.eval(['x': 2], true))//, 'y':4, 'z': 5]))
 		println()
-		
+		def tree4 = crossoverTrees(tree3, tree2)
+		def tree5 = crossoverTrees(tree4, tree)
 		println("the fittness is " + evaluateTree(tree3,[0:1, 1:2, 2:3],['x']) )
 		
-		for(i in 0 .. 20){
-			println(Math.sin(i))
-		}
+		println()
+		println("tree 5 evaluates to : " + tree5.eval(['x': 2], true))//, 'y':4, 'z': 5]))
+		
+		println()
+		println("The fittness of tree5 is " + evaluateTree(tree5,[0:1, 1:2, 2:3],['x']))
 
 		//println([[1, 2]: 1, [1, 2]: 2].each {k,v -> println "$k"})
 		//println(hashMap)

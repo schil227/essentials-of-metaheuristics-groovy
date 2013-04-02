@@ -15,17 +15,18 @@ import singleStateMethods.SteepestAscentHillClimberWithReplacement
 class MuPlusLambdaESExperimentRunner {
 	
 	static runExperiment(searchers, problems, numRuns = 30) {
+		println("starting runs")
 		for (p in problems) {
 			for (s in searchers) {
 				for (i in 0..<numRuns) {
 					p.evalCount = 0
-					def result = s.maximize()
+					def result = s.maximize(p)
 					// the problem pairings model the function -x^2 + 4x + 2
-					def problemPairings = [0: 2, 0.5 : 3.75, 1: 5, 1.5: 5.75, 2 : 6, 2.5 : 5.75, 3 : 5, 3.5 : 3.75, 4 : 2, 4.5 : -0.25, 5: -3]
+					def problemPairings = [0: 2, 0.5 : 3.75, 1: 5.0, 1.5: 5.75, 2 : 6.0, 2.5 : 5.75, 3 : 5.0, 3.5 : 3.75, 4 : 2.0, 4.5 : -0.25, 5: -3]
 					def variables = ['x']
-					//p.toggleOutput()
-					p.evaluateTree(result, problemPairings,variables)
-					//p.toggleOutput()
+//					p.toggleOutputCompare()
+//					p.evaluateTree(result, problemPairings,variables)
+//					p.toggleOutputCompare()
 					println "${s.toString()}\t${p.toString()}\t${p.evaluateTree(result, problemPairings,variables )}"
 				}
 			}
@@ -34,7 +35,7 @@ class MuPlusLambdaESExperimentRunner {
 
 	static main(args) {
 		def searchers = [
-			new CopyOfMuPlusLambdaESTreeGP(numParents : 2, numChildren : 4),
+			new CopyOfMuPlusLambdaESTreeGP(numParents : 30, numChildren : 60),
 			//			new MuPlusLambdaES(numParents : 2, numChildren : 6, numTweaks: 2),
 			//			new MuPlusLambdaES(numParents : 2, numChildren : 6, numTweaks: 3),
 			//			new MuPlusLambdaES(numParents : 2, numChildren : 6, numTweaks: 4),
@@ -42,7 +43,7 @@ class MuPlusLambdaESExperimentRunner {
 			//			new MuPlusLambdaES(numParents : 2, numChildren : 6, numTweaks: 6),
 		]
 		def problems = [
-			new TreeGP(maxIterations : 1000)
+			new TreeGP(maxIterations : 50000)
 			//new OnesMax(numBits : 1000, maxIterations : 1000),
 			//new OnesMax(numBits : 100, maxIterations : 1000),
 			//new OnesMax(numBits : 1000, maxIterations : 1000),
