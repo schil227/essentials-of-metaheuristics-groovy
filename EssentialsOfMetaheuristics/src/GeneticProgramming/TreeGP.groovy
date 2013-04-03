@@ -253,5 +253,9 @@ class TreeGP {
 
 		//println([[1, 2]: 1, [1, 2]: 2].each {k,v -> println "$k"})
 		//println(hashMap)
+		
+		for(i in 0..10){
+			println(Math.sin(i))
+		}
 	}
 }
