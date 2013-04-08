@@ -36,9 +36,15 @@ class CopyOfMuPlusLambdaESTreeGP {
                         new CosFunc(),
                         new MaxFunc(),
                         new MinFunc(),
+                        new SinFunc(),
+                        new Divide(),
+                        new AbsFunc(),
+                        new CosFunc(),
+                        new MaxFunc(),
+                        new MinFunc(),
                         new SinFunc()
 		]
-		def setOfTerminals = [1, -1, 2, -2, 'e.getDistance()', 'getX()', 'getY()', 'e.getVelocity()', ]
+		def setOfTerminals = [1, -1, 2, -2, 'e.getDistance()', 'getX()', 'getY()', 'e.getVelocity()']
 
 		numChildren.times {
 			individualArr.add(treeGP.generateRandomTree(setOfFunctions, setOfTerminals, 5, "growf"))

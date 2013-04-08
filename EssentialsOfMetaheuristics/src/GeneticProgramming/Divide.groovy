@@ -5,9 +5,9 @@ class Divide {
 	
 	public String toString(listOfArgs){
 		if(listOfArgs[1] == 0 || listOfArgs[1] == -0){
-			return 1
+			return '1'
 		} else {
-			return listOfArgs[0] / listOfArgs[1]
+			return '(' + listOfArgs[0].toString() + ') / (' +  listOfArgs[1].toString() + ')'
 		}
 	}
 }

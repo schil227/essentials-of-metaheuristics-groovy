@@ -21,4 +21,8 @@ class TerminalNode {
 			return terminal
 		}
 	}
+    
+       public String toString(){
+           return terminal.toString()
+       } 
 }
