@@ -2,8 +2,6 @@ package GeneticProgramming
 
 class Add {
   def arity = 2
-  
-  public String toString(listOfArgs){
-	  return '(' + listOfArgs[0].toString() + ') + (' +  listOfArgs[1].toString() + ')'
-  }
+  def expr = {arg0, arg1 -> '(' + arg0.toString() + ') + (' +  arg1.toString() + ')'}
+
 }

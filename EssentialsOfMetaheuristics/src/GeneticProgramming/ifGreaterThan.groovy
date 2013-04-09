@@ -1,9 +1,7 @@
 package GeneticProgramming
 
 class ifGreaterThan {
-  def arity = 4
-  
-  public String toString(listOfArgs){
-      return '('+ listOfArgs[0]+'>'+ listOfArgs[1] +':' + ListOfArgs[2]+','+ listOfArgs[3] +')'
-  }
+  def arity = 4 
+  def expr = {arg0, arg1, arg2, arg3 -> return '('+ arg0.toString() + '>'+ arg1.toString() +':' + arg2.toString() +','+ arg3.toString() +')'}
+
 }

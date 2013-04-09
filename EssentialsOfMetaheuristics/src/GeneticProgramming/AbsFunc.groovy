@@ -3,8 +3,5 @@ package GeneticProgramming
 class AbsFunc {
     def arity = 1
     
-    public String toString(listOfArgs){
-        'Math.abs(' + listOfArgs[0] + ')'
-    }
-
+    def expr = {arg -> return 'Math.abs('+arg.toString()+')'}
 }
