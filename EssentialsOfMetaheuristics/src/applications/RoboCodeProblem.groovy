@@ -15,6 +15,7 @@ import GeneticProgramming.Subtract
  * angle_diff : the coefficient for the different in angles between us and the point and then and the point
  * distance : the coefficient for the distance between the point and the enemy
  */
+import GeneticProgramming.ifGreaterThan;
 
 class RoboCodeProblem {
     Integer individualCount = 0
@@ -35,12 +36,13 @@ class RoboCodeProblem {
         new MaxFunc(),
         new MinFunc(),
         new SinFunc(),
-        new Divide(),
         new AbsFunc(),
         new CosFunc(),
         new MaxFunc(),
         new MinFunc(),
-        new SinFunc()
+        new SinFunc(),
+        new ifGreaterThan(),
+        new ifGreaterThan()
     ]
     def setOfTerminals = [
         1,
@@ -62,10 +64,10 @@ class RoboCodeProblem {
     def random() {
         ++individualCount
         [ 'id' : individualCount,
-                    'enemy_energy' : random.nextGaussian()*STDEV,
-                    'my_energy' : random.nextGaussian()*STDEV,
-                    'angle_diff' : random.nextGaussian()*STDEV,
-                    'distance' : random.nextGaussian()*STDEV ]
+                    'enemy_energy' : treeGP.generateRandomTree(setOfFunctions, setOfTerminals, 5, "growf"),
+                    'my_energy' : treeGP.generateRandomTree(setOfFunctions, setOfTerminals, 5, "growf"),
+                    'angle_diff' : treeGP.generateRandomTree(setOfFunctions, setOfTerminals, 5, "growf"),
+                    'distance' : treeGP.generateRandomTree(setOfFunctions, setOfTerminals, 5, "growf") ]
     }
 
     def copy(individual) {
