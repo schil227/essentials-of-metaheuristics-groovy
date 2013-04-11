@@ -21,7 +21,9 @@ class BattleRunner {
     }
 
     def buildBattleFile(id) {
-        File battleFile = new File("${robotDirectory}/evolve.battle")
+        println("building the battlefile")
+		println("adding robot " + id + "to the battle")
+		File battleFile = new File("${robotDirectory}/evolve.battle")
         battleFile.delete()
         battleFile.createNewFile()
         def result = template.make(["id" : id])
@@ -47,7 +49,7 @@ class BattleRunner {
                 result = Integer.parseInt(m[0][1])
             }
         }
-        if (result == false) {
+        if (result != false) {
             return result
         } else {
             throw new RuntimeException("Didn't find score for evolved robot")
@@ -55,7 +57,8 @@ class BattleRunner {
     }
     
     def linkJarFile(id) {
-        def robotDir = new File("${userHome}/robocode/robots/")
+        println("linking jar file of robot "+id)
+		def robotDir = new File("${userHome}/robocode/robots/")
         def command = "ln -s ${robotDirectoryAbsolute}/Individual_${id}.jar ."
         def proc = command.execute(null, robotDir)
         proc.waitFor()

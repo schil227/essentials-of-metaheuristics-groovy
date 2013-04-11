@@ -14,7 +14,7 @@ import singleStateMethods.SteepestAscentHillClimberWithReplacement
 
 class MuPlusLambdaESExperimentRunner {
 	
-	static runExperiment(searchers, problems, numRuns = 30) {
+	static runExperiment(searchers, problems, numRuns = 10) {
 		println("starting runs")
 		for (p in problems) {
 			for (s in searchers) {
@@ -29,7 +29,7 @@ class MuPlusLambdaESExperimentRunner {
 
 	static main(args) {
 		def searchers = [
-			new CopyOfMuPlusLambdaESTreeGP(numParents : 15, numChildren : 30),
+			new CopyOfMuPlusLambdaESTreeGP(numParents : 10, numChildren : 10),
 
 		]
 		def problems = [
