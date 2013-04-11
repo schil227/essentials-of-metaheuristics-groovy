@@ -34,29 +34,29 @@ class CopyOfMuPlusLambdaESTreeGP {
             new Subtract(),
             new Multiply(),
             new Divide(),
-            new AbsFunc(),
-            new CosFunc(),
-            new MaxFunc(),
-            new MinFunc(),
-            new SinFunc(),
-            new Divide(),
-            new AbsFunc(),
-            new CosFunc(),
-            new MaxFunc(),
-            new MinFunc(),
-            new SinFunc(),
-            new ifGreaterThan(),
-            new ifGreaterThan()
+//            new AbsFunc(),
+//            new CosFunc(),
+//            new MaxFunc(),
+//            new MinFunc(),
+//            new SinFunc(),
+//            new Divide(),
+//            new AbsFunc(),
+//            new CosFunc(),
+//            new MaxFunc(),
+//            new MinFunc(),
+//            new SinFunc(),
+//            new ifGreaterThan(),
+//            new ifGreaterThan()
         ]
         def setOfTerminals = [
             1,
             -1,
             2,
             -2,
-            'e.getDistance()',
-            'getX()',
-            'getY()',
-            'e.getVelocity()'
+ //           'e.getDistance()',
+ //           'getX()',
+ //           'getY()',
+ //           'e.getVelocity()'
         ]
 
         println("making the initial individuals")
@@ -73,8 +73,8 @@ class CopyOfMuPlusLambdaESTreeGP {
                     0]
             println("gonna def the hashmap")
             tmpNode[1] = defineHashMap(tmpNode[0])
-            println("the hashmap be lookin like " + defineHashMap(tmpNode[0]))
-            println("hashmaps class be lookin like " + tmpNode[1].class)
+//            println("the hashmap be lookin like " + defineHashMap(tmpNode[0]))
+//            println("hashmaps class be lookin like " + tmpNode[1].class)
             individualArr.add(tmpNode)
         }
         
