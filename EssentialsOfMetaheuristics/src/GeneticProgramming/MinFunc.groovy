@@ -2,7 +2,7 @@ package GeneticProgramming
 
 class MinFunc {
     def arity = 2
-    def expr = {arg0, arg1 -> 'Math.min(' + listOfArgs[0].toString()  + ',' + listOfArgs[1].toString() + ')'}
+    def expr = {arg0, arg1 -> 'Math.min(' + arg0.toString()  + ',' + arg1.toString() + ')'}
     
 
 }

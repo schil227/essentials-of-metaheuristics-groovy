@@ -13,7 +13,10 @@ class RobotBuilder {
     }
     
     def buildJarFile(values) {
+        println("the values are " + values)
+        println("building the class file")
         buildClassFile(values)
+        println("println building the properties")
         buildPropertiesFile(values)
         def id = values['id']
         def fileNamePrefix = "Individual_${id}"
@@ -21,9 +24,11 @@ class RobotBuilder {
         [".java", ".class", "\$MicroEnemy.class", ".properties"].each { suffix ->
             command += " ${robotPackage}/${fileNamePrefix}${suffix}"
         }
+        println("makin the file!")
         def proc = command.execute(null, new File(robotDirectory))
         proc.waitFor()
         println(proc.in.text)
+        println("assertin stuff")
         assert proc.err.text.equals("")
         assert proc.exitValue() == 0
     }
@@ -37,20 +42,25 @@ class RobotBuilder {
     }
     
     def buildClassFile(values) {
+        println("in the buildClassFile, gonna run buildJavaFiles")
         def javaFileName = buildJavaFile(values)
         def command = "javac -cp ../lib/robocode.jar ${robotPackage}/${javaFileName}"
+        println("in the buildClassFile method, gonna run the proc")
         def proc = command.execute(null, new File(robotDirectory))
         proc.waitFor()
         assert proc.exitValue() == 0
         assert proc.err.text.equals("")
-//        println "return code: ${proc.exitValue()}"
-//        println "stderr: ${proc.err.text}"
-//        println "stdout: ${proc.in.text}"
+        println "return code: ${proc.exitValue()}"
+        println "stderr: ${proc.err.text}"
+        println "stdout: ${proc.in.text}"
     }
     
     def buildJavaFile(values) {
+        println("building the java files ")
         def javaFileName = makeJavaFileName(values)
+        println("gonna create the file")
         File javaFile = createFile(javaFileName)
+        println("gonna write the file")
         writeFile(javaFile, values)
         return javaFileName
     }

@@ -45,7 +45,7 @@ class BattleRunner {
                 result = Integer.parseInt(m[0][1])
             }
         }
-        if (result) {
+        if (result == false) {
             return result
         } else {
             throw new RuntimeException("Didn't find score for evolved robot")
