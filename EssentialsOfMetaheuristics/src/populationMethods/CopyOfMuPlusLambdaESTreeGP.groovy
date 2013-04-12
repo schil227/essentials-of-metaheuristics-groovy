@@ -64,10 +64,10 @@ class CopyOfMuPlusLambdaESTreeGP {
         numChildren.times {
            tmpNode = [
                     [
-                        treeGP.generateRandomTree(setOfFunctions, setOfTerminals, 5, "growf"),
-                        treeGP.generateRandomTree(setOfFunctions, setOfTerminals, 5, "growf"),
-                        treeGP.generateRandomTree(setOfFunctions, setOfTerminals, 5, "growf"),
-                        treeGP.generateRandomTree(setOfFunctions, setOfTerminals, 5, "growf")
+                        treeGP.generateRandomTree(setOfFunctions, setOfTerminals, 3, "growf"),
+                        treeGP.generateRandomTree(setOfFunctions, setOfTerminals, 3, "growf"),
+                        treeGP.generateRandomTree(setOfFunctions, setOfTerminals, 3, "growf"),
+                        treeGP.generateRandomTree(setOfFunctions, setOfTerminals, 3, "growf")
                     ],
                     [:],
                     0]
@@ -103,6 +103,7 @@ class CopyOfMuPlusLambdaESTreeGP {
             for (individual in individualArr) {
 				battleRunner.buildBattleFile(individual[1].id)
 				individual[2] = battleRunner.runBattle(individual[1].id)
+                println("The score for "+individual[1].id + " was: " + individual[2])
                 if (individual[2]> bestQuality) {
                     best = individual
                     bestQuality =  individual[2]
@@ -114,21 +115,23 @@ class CopyOfMuPlusLambdaESTreeGP {
             for (i in 0..<numParents) {
                 //				println("the parents evaluated to : " + treeGP.evaluateTree(individualArr.get(i), problemParings,['x']))
                 for (j in 0..<(numChildren / numParents)) {
-                    def treeToTweak =[[], [], 0]
+                    def treeToTweak =[[], [:], 0]
                     4.times{
-                        treeToTweak[0].add(treeGP.crossoverTrees(individualArr.get(randomParent.nextInt(numParents))[0][0], individualArr.get(randomParent.nextInt(numParents))[0][0]))
+                        treeToTweak[0].add(treeGP.crossoverTrees(individualArr.get(randomParent.nextInt(numParents))[0][randomParent.nextInt(4)], individualArr.get(randomParent.nextInt(numParents))[0][randomParent.nextInt(4)]))
                     }
-                    treeToTweak[1] = defineHashMap(treeToTweak[0])
-                    individualArr.add(treeToTweak)    
-                    
+                    //treeToTweak[1] = defineHashMap(treeToTweak[0])
+                    individualArr.add(treeToTweak)                        
                 }
             }
-            
-            individualArr.each{ robot ->
-                robotBuilder.buildJarFile(robot[1])
-                battleRunner.buildBattleFile(robot[1].id)
+        
+            individualArr.each{individual ->
+                println("the id before defHashMap: " + individual[1].id)
+                individual[1] = defineHashMap(individual[0])    
+                println("the id after defHashMap: " + individual[1].id)
+                robotBuilder.buildJarFile(individual[1])
             }
         }
+
         return best
     }
 
