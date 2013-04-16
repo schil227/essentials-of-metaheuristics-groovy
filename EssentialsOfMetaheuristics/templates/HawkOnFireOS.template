@@ -159,6 +159,24 @@ public class Individual_${id} extends AdvancedRobot
 		
 		// locks the radar if there is only one opponent left
 		if(getOthers()==1)	setTurnRadarLeftRadians(getRadarTurnRemainingRadians());
+    		double absB;
+    		setTurnRightRadians(Math.cos(absB = e.getBearingRadians()));
+
+		enemyLog = String.valueOf((char)(int)Math.round(e.getVelocity() * Math.sin(e.getHeadingRadians() - (absB += getHeadingRadians())))).concat(enemyLog);
+		int i;
+    int index;
+    while ((index = enemyLog.indexOf(enemyLog.substring(0, matchLenght--), i = (int)(e.getDistance() / 12.5D))) < 0);
+    do
+    {
+      absB += Math.asin((byte)enemyLog.charAt(index--) / e.getDistance());
+      i--; } while (i > 0);
+
+    setTurnGunRightRadians(Utils.normalRelativeAngle(absB - getGunHeadingRadians()));
+
+    setFire(2.5D);
+
+    setTurnRadarLeft(getRadarTurnRemaining());
+		
 	}
 	
 //- minor events ----------------------------------------------------------------------------------------------------------------------------

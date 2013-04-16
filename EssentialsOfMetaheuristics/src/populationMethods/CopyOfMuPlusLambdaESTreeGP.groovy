@@ -81,7 +81,7 @@ class CopyOfMuPlusLambdaESTreeGP {
         println("finding the best")
 
         def best = individualArr[0][0]
-        def robotBuilder = new RobotBuilder("templates/HawkOnFireOS.template")
+        def robotBuilder = new RobotBuilder("templates/MaxRiskEvolved.template")
         def battleRunner = new BattleRunner("templates/battle.template")
         println("building the jar files")
         individualArr.each{ robot ->
