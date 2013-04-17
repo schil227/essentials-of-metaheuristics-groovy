@@ -111,7 +111,7 @@ class CopyOfMuPlusLambdaESTreeGP {
             }
 			println("ran the battles, gonna sort the dudes. Best quality is "+bestQuality)
             individualArr = individualArr.sort{it[2]}/*[0..<numParents]*/.reverse()[0..<numParents]
-			println("finished sorting them booya. individualArr[0][2]= "+individualArr[0][2]+" and should be: "+bestQuality)
+			println("finished sorting them booya.")// individualArr[0][2]= "+individualArr[0][2]+" and should be: "+bestQuality)
             for (i in 0..<numParents) {
                 //				println("the parents evaluated to : " + treeGP.evaluateTree(individualArr.get(i), problemParings,['x']))
                 for (j in 0..<(numChildren / numParents)) {

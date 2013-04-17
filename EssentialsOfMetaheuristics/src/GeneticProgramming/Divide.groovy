@@ -3,10 +3,7 @@ package GeneticProgramming
 class Divide {
 	def arity = 2
         def expr = {arg0, arg1 -> 
-            if(arg1 == 0)
-              {'1'}
-            else
-              {'(' + arg0.toString() + ') / (' +  arg1.toString() + ')'} 
-           }
+              '((' + arg1.toString() + ' != 0 ) ? ((' + arg0.toString() + ') / (' +  arg1.toString() + ')) : 1)'
+           } //( (asdf) != 0 : ((ajkl)/(asdf)), 1)
     
 }
