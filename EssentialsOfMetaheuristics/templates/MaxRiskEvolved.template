@@ -1,95 +1,97 @@
 package evolved;
-
-import java.awt.Color;
-import java.awt.geom.Rectangle2D;
-import java.awt.geom.Point2D;
 import robocode.AdvancedRobot;
 import robocode.ScannedRobotEvent;
 import robocode.WinEvent;
+import java.awt.Color;
+import java.awt.geom.Point2D;
 import robocode.util.Utils;
 
+/**
+ MaxRisk - a robot by Kev
+ 	Generates points in a circle to determine the best direction (like minimum risk movement)...
+ 	...but it's a ram bot!
+    748 bytes with colors + dance
+ */
 public class Individual_${id} extends AdvancedRobot
 {
+	double absoluteBearing;
+	double expectedHeading;
+	double predictedDistance;
+	double predictedHeading;
+	public void run() {
+		setAdjustGunForRobotTurn(true);
+		setAdjustRadarForGunTurn(true);
+		setColors(Color.red.darker().darker(), Color.red.darker(), Color.red);
+		do{
+			turnRadarRightRadians(Double.POSITIVE_INFINITY);
+		}while(true);
+	}
 
-  double absoluteBearing;
-  double expectedHeading;
-  double predictedDistance;
-  double predictedHeading;
-
-  public void run()
-  {
-    setAdjustGunForRobotTurn(true);
-    setAdjustRadarForGunTurn(true);
-    setColors(Color.red.darker().darker(), Color.red.darker(), Color.red);
-    while (true)
-      turnRadarRightRadians((1.0D / 0.0D));
-  }
-
-  public void onScannedRobot(ScannedRobotEvent e)
-  {
-    double thing = ${enemy_energy};
- 	double thing1 = ${my_energy};
-  	double thing2 = ${angle_diff};
-  	double thing3 = ${distance};
-    double predictedX = getX() + Math.sin(this.absoluteBearing = getHeadingRadians() + e.getBearingRadians()) * e.getDistance();
-    double predictedY = getY() + Math.cos(this.absoluteBearing) * e.getDistance();
-    double enemyTurnRate = -Utils.normalRelativeAngle(this.expectedHeading - (this.predictedHeading = this.expectedHeading = e.getHeadingRadians()));
-    double bulletPower = Math.min(e.getDistance() < 250.0D ? 500.0D / e.getDistance() : 200.0D / e.getDistance(), 3);
-    int time = 0;
-    while (time++ * (20.0D - 3 * bulletPower) < (this.predictedDistance = Point2D.Double.distance(getX(), getY(), predictedX, predictedY)) - 18.0D)
-    {
-      this.predictedHeading += enemyTurnRate / 3;
-      predictedX += Math.sin(this.predictedHeading) * e.getVelocity();
-      predictedY += Math.cos(this.predictedHeading) * e.getVelocity();
-      if ((predictedX < 18.0D) || (predictedY < 18.0D) || (predictedX > 782.0D) || (predictedY > 582.0D))
-      {
-        predictedX = Math.min(Math.max(18.0D, predictedX), 782.0D);
-        predictedY = Math.min(Math.max(18.0D, predictedY), 582.0D);
-        break;
-      }
-    }
-    double maxValue = (-8675309D);
-    for (double i = 0.0D; i < 6.3D; i += 0.1D)
-    {
-      double relativeTurn = Utils.normalRelativeAngle(i - getHeadingRadians());
-      int virtualDirection = 1;
-      if (relativeTurn < -1.570796326794897D)
-      {
-        relativeTurn += 3.141592653589793D;
-        virtualDirection = -1;
-      }
-      if (relativeTurn > 1.570796326794897D)
-      {
-        relativeTurn -= 3.141592653589793D;
-        virtualDirection = -1;
-      }
-      double tryX = getX() + Math.sin(i) * 8.0D;
-      double tryY = getY() + Math.cos(i) * 8.0D;
-      double value = Math.abs(Math.cos(Utils.normalRelativeAngle(this.absoluteBearing - i))) * e.getDistance() / 150.0D;
-      value += this.predictedDistance - Point2D.Double.distance(tryX, tryY, predictedX, predictedY);
-      value -= (Point2D.Double.distance(tryX, tryY, 400.0D, 300.0D) - Point2D.Double.distance(getX(), getY(), 300.0D, 400.0D)) / 3;
-      if ((tryX < 30.0D) || (tryY < 30.0D) || (tryX > 770.0D) || (tryY > 570.0D)) value -= 10000.0D;
-      if (value > maxValue)
-      {
-        maxValue = value;
-        setTurnRightRadians(relativeTurn);
-        setAhead(1000 * virtualDirection);
-      }
-    }
-    setMaxVelocity(Math.abs(getTurnRemaining()) < 30.0D ? 8.0D : 8.0D - Math.abs(getTurnRemaining() / 30.0D));
-    double gunTurn = Utils.normalRelativeAngle(Math.atan2(predictedX - getX(), predictedY - getY()) - getGunHeadingRadians());
-    setTurnGunRightRadians(gunTurn);
-    double radarTurn = Utils.normalRelativeAngle(this.absoluteBearing - getRadarHeadingRadians());
-    setTurnRadarRightRadians(radarTurn + (radarTurn > 0.0D ? 0.3926990816987241D : -0.3926990816987241D));
-    if ((Math.abs(gunTurn) < 0.35D) && (getGunHeat() == 0.0D))
-    {
-      setFire(bulletPower);
-    }
-  }
-
-  public void onWin(WinEvent e) {
-    setMaxVelocity(0.0D);
-    setTurnRightRadians((1.0D / 0.0D));
-    setTurnGunRightRadians((-1.0D / 0.0D));
-  }
+	public void onScannedRobot(ScannedRobotEvent e) {
+	
+		double thing = ${velocity};
+ 		double thing1 = ${aim};
+  		//double thing2 = {angle_diff};
+  		//double thing3 = {distance};
+		double predictedX = getX() + (Math.sin(absoluteBearing = (getHeadingRadians() + e.getBearingRadians())) * e.getDistance());
+		double predictedY = getY() + (Math.cos(absoluteBearing) * e.getDistance()); 
+		double enemyTurnRate = -Utils.normalRelativeAngle(expectedHeading - (predictedHeading = expectedHeading = e.getHeadingRadians()));
+		double bulletPower = Math.min(e.getDistance() < 250 ? 500/e.getDistance() : 200/e.getDistance(), 3);
+		int time = 0;
+		while((time++) * (20 - (3 * bulletPower)) < (predictedDistance = Point2D.Double.distance(getX(), getY(), predictedX, predictedY)) - 18)
+		{	
+			predictedHeading += (enemyTurnRate / 3);
+			predictedX += Math.sin(predictedHeading) * e.getVelocity();	
+			predictedY += Math.cos(predictedHeading) * e.getVelocity();
+			if((predictedX < 18.0)||(predictedY < 18.0)||(predictedX > 782.0)||(predictedY > 582.0))
+			{		
+				predictedX = Math.min(Math.max(18.0, predictedX), 782.0);	
+				predictedY = Math.min(Math.max(18.0, predictedY), 582.0);
+				break;
+			}
+		}
+		double maxValue = Double.NEGATIVE_INFINITY;
+		for(double i = 0; i < 6.3; i+= 0.1)
+		{
+			double relativeTurn = Utils.normalRelativeAngle(i - getHeadingRadians());
+			int virtualDirection = 1;
+			if(relativeTurn < -Math.PI/2)
+			{
+				relativeTurn += Math.PI;
+				virtualDirection = -1;
+			}
+			if(relativeTurn > Math.PI/2)
+			{
+				relativeTurn -= Math.PI;
+				virtualDirection = -1;
+			}
+			double tryX = getX() + (Math.sin(i) * 8.0);
+			double tryY = getY() + (Math.cos(i) * 8.0);
+			double value = Math.abs(Math.cos(Utils.normalRelativeAngle(absoluteBearing-i))) * e.getDistance() / 150;
+			value += (predictedDistance - Point2D.Double.distance(tryX, tryY, predictedX, predictedY));
+			value -= ((Point2D.Double.distance(tryX,tryY, 400.0, 300.0) - Point2D.Double.distance(getX(), getY(), 300.0, 400.0))) / 3;
+			if(tryX < 30.0 || tryY < 30.0 || tryX > 770.0 || tryY > 570.0){value -= 10000;}
+			if(value > maxValue)
+			{
+				maxValue = value;
+				setTurnRightRadians(relativeTurn);
+				setAhead(1000 * virtualDirection);
+			} 
+		}	
+		setMaxVelocity(Math.abs(getTurnRemaining()) < 30 ? 8 : 8 - Math.abs(getTurnRemaining()/30));
+		double gunTurn = Utils.normalRelativeAngle(Math.atan2(predictedX - getX(), predictedY - getY()) - getGunHeadingRadians());
+		setTurnGunRightRadians(gunTurn);
+		double radarTurn = Utils.normalRelativeAngle(absoluteBearing - getRadarHeadingRadians());
+		setTurnRadarRightRadians(radarTurn + (radarTurn > 0 ? Math.PI/8 : -Math.PI/8));
+		if((Math.abs(gunTurn) < 0.35)&&(getGunHeat() == 0.0))
+		{
+			setFire(bulletPower);
+		}
+	}
+	public void onWin(WinEvent e)
+	{
+		setMaxVelocity(0);
+		setTurnRightRadians(Double.POSITIVE_INFINITY);
+		setTurnGunRightRadians(Double.NEGATIVE_INFINITY);
+	}
 }
