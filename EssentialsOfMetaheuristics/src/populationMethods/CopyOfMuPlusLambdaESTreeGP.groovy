@@ -16,8 +16,8 @@ class CopyOfMuPlusLambdaESTreeGP {
         
         return [
                     'id' : individualCount,
-                    'velocity' : arr[0].toString(),
-                    'aim' :  arr[1].toString(),
+                    'bullet_power' : arr[0].toString(),
+                    'aim_factor' :  arr[1].toString(),
                     //'angle_diff' :  arr[2].toString(),
                     //'distance' :  arr[3].toString()
                 ]
@@ -27,35 +27,39 @@ class CopyOfMuPlusLambdaESTreeGP {
         def individualArr = []
         def setOfFunctions = [
             new Add(),
-            new Subtract(),
-            new Multiply(),
-            new Divide(),
-            new Add(),
-            new Subtract(),
-            new Multiply(),
-            new Divide(),
+			new SinFunc(),
+			new Subtract(),
+			new ifGreaterThan(),
+			new ifLessThan(),
+			new Multiply(),
+			new MinFunc(),
+			new Divide(),
+			new MaxFunc(),
             new AbsFunc(),
             new CosFunc(),
-            new MaxFunc(),
-            new MinFunc(),
-            new SinFunc(),
-            new Divide(),
-            new AbsFunc(),
-            new CosFunc(),
-            new MaxFunc(),
-            new MinFunc(),
-            new SinFunc(),
-            new ifGreaterThan(),
-            new ifGreaterThan()
+			new Add(),
+			new SinFunc(),
+			new Subtract(),
+			new ifGreaterThan(),
+			new ifLessThan(),
+			new Multiply(),
+			new MinFunc(),
+			new Divide(),
+			new MaxFunc(),
+			new AbsFunc(),
+			new CosFunc()
         ]
         def setOfTerminals = [
             1,
             -1,
             2,
             -2,
-           'e.getVelocity()',
-           'e.getDistance()',
-           'getTurnRemaining()',
+			randomParent.nextDouble()*10,
+           //'e.getVelocity()',
+           //'e.getDistance()',
+		   'predictedHeading',
+		   'predictedDistance',
+		   randomParent.nextDouble()		 
         ]
 
         println("making the initial individuals")
@@ -84,7 +88,7 @@ class CopyOfMuPlusLambdaESTreeGP {
         def battleRunner = new BattleRunner("templates/battle.template")
         println("building the jar files")
         individualArr.each{ robot ->
-            println("the class is " + robot[1].class)
+            //println("the class is " + robot[1].class)
             println("gonna make the jar file")
             robotBuilder.buildJarFile(robot[1])
             //println("gonna build the battle file")
@@ -109,7 +113,7 @@ class CopyOfMuPlusLambdaESTreeGP {
                 }
             }
 			println("ran the battles, gonna sort the dudes. Best quality is "+bestQuality)
-            individualArr = individualArr.sort{it[2]}/*[0..<numParents]*/.reverse()[0..<numParents]
+            individualArr = individualArr.sort{it[2]}.reverse()[0..<numParents]
 			println("finished sorting them booya.")// individualArr[0][2]= "+individualArr[0][2]+" and should be: "+bestQuality)
             for (i in 0..<numParents) {
                 //				println("the parents evaluated to : " + treeGP.evaluateTree(individualArr.get(i), problemParings,['x']))

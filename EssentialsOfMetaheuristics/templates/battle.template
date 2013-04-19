@@ -5,4 +5,4 @@ robocode.battle.numRounds=10
 robocode.battle.gunCoolingRate=0.1
 robocode.battle.rules.inactivityTime=450
 robocode.battle.hideEnemyNames=true
-robocode.battle.selectedRobots=evolved.GloriousDayR1,,evolved.Individual_${id}
+robocode.battle.selectedRobots=sample.SpinBot, rz.HawkOnFire, evolved.Individual_${id}

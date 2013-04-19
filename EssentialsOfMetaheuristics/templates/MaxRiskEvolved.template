@@ -28,15 +28,11 @@ public class Individual_${id} extends AdvancedRobot
 	}
 
 	public void onScannedRobot(ScannedRobotEvent e) {
-	
-		double thing = ${velocity};
- 		double thing1 = ${aim};
-  		//double thing2 = {angle_diff};
-  		//double thing3 = {distance};
+
 		double predictedX = getX() + (Math.sin(absoluteBearing = (getHeadingRadians() + e.getBearingRadians())) * e.getDistance());
 		double predictedY = getY() + (Math.cos(absoluteBearing) * e.getDistance()); 
 		double enemyTurnRate = -Utils.normalRelativeAngle(expectedHeading - (predictedHeading = expectedHeading = e.getHeadingRadians()));
-		double bulletPower = Math.min(e.getDistance() < 250 ? 500/e.getDistance() : 200/e.getDistance(), 3);
+		double bulletPower = ${bullet_power}; /*Math.min(e.getDistance() < 250 ? 500/e.getDistance() : 200/e.getDistance(), 3);*/
 		int time = 0;
 		while((time++) * (20 - (3 * bulletPower)) < (predictedDistance = Point2D.Double.distance(getX(), getY(), predictedX, predictedY)) - 18)
 		{	
@@ -79,11 +75,11 @@ public class Individual_${id} extends AdvancedRobot
 			} 
 		}	
 		setMaxVelocity(Math.abs(getTurnRemaining()) < 30 ? 8 : 8 - Math.abs(getTurnRemaining()/30));
-		double gunTurn = Utils.normalRelativeAngle(Math.atan2(predictedX - getX(), predictedY - getY()) - getGunHeadingRadians());
+		double gunTurn =Utils.normalRelativeAngle(Math.atan2(predictedX - getX(), predictedY - getY()) - getGunHeadingRadians());
 		setTurnGunRightRadians(gunTurn);
 		double radarTurn = Utils.normalRelativeAngle(absoluteBearing - getRadarHeadingRadians());
 		setTurnRadarRightRadians(radarTurn + (radarTurn > 0 ? Math.PI/8 : -Math.PI/8));
-		if((Math.abs(gunTurn) < 0.35)&&(getGunHeat() == 0.0))
+		if((Math.abs(gunTurn) < ${aim_factor}/*0.35*/)&&(getGunHeat() == 0.0))
 		{
 			setFire(bulletPower);
 		}
