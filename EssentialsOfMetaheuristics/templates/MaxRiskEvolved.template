@@ -34,7 +34,7 @@ public class Individual_${id} extends AdvancedRobot
 		double enemyTurnRate = -Utils.normalRelativeAngle(expectedHeading - (predictedHeading = expectedHeading = e.getHeadingRadians()));
 		double bulletPower = ${bullet_power}; /*Math.min(e.getDistance() < 250 ? 500/e.getDistance() : 200/e.getDistance(), 3);*/
 		int time = 0;
-		while((time++) * (20 - (3 * bulletPower)) < (predictedDistance = Point2D.Double.distance(getX(), getY(), predictedX, predictedY)) - 18)
+		while((time++) * (20 - (3 * (bulletPower > 3 ? 3 : bulletPower))) < (predictedDistance = Point2D.Double.distance(getX(), getY(), predictedX, predictedY)) - 18)
 		{	
 			predictedHeading += (enemyTurnRate / 3);
 			predictedX += Math.sin(predictedHeading) * e.getVelocity();	
@@ -79,7 +79,7 @@ public class Individual_${id} extends AdvancedRobot
 		setTurnGunRightRadians(gunTurn);
 		double radarTurn = Utils.normalRelativeAngle(absoluteBearing - getRadarHeadingRadians());
 		setTurnRadarRightRadians(radarTurn + (radarTurn > 0 ? Math.PI/8 : -Math.PI/8));
-		if((Math.abs(gunTurn) < ${aim_factor}/*0.35*/)&&(getGunHeat() == 0.0))
+		if((Math.abs(gunTurn) < 0.35)&&(getGunHeat() == 0.0))
 		{
 			setFire(bulletPower);
 		}
