@@ -79,7 +79,7 @@ public class Individual_${id} extends AdvancedRobot
 		setTurnGunRightRadians(gunTurn);
 		double radarTurn = Utils.normalRelativeAngle(absoluteBearing - getRadarHeadingRadians());
 		setTurnRadarRightRadians(radarTurn + (radarTurn > 0 ? Math.PI/8 : -Math.PI/8));
-		if((Math.abs(gunTurn) < 0.35)&&(getGunHeat() == 0.0))
+		if((Math.abs(gunTurn) < ${aim_factor}/*0.35*/)&&(getGunHeat() == 0.0))
 		{
 			setFire(bulletPower);
 		}

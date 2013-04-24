@@ -17,7 +17,7 @@ class CopyOfMuPlusLambdaESTreeGP {
         return [
                     'id' : individualCount,
                     'bullet_power' : arr[0].toString(),
-                    //'aim_factor' :  arr[1].toString(),
+                    'aim_factor' :  arr[1].toString(),
                     //'angle_diff' :  arr[2].toString(),
                     //'distance' :  arr[3].toString()
                 ]
@@ -55,11 +55,13 @@ class CopyOfMuPlusLambdaESTreeGP {
             2,
             -2,
 			randomParent.nextDouble()*10,
-           //'e.getVelocity()',
+			randomParent.nextDouble()*10,
+           'e.getVelocity()',
            'e.getDistance()',
-		   //'predictedHeading',
-		   //'predictedDistance',
-		   randomParent.nextDouble()		 
+		   'predictedHeading',
+		   'predictedDistance',
+		   randomParent.nextDouble(),
+		   randomParent.nextDouble()
         ]
 
         println("making the initial individuals")
@@ -68,7 +70,7 @@ class CopyOfMuPlusLambdaESTreeGP {
            tmpNode = [
                     [
                         treeGP.generateRandomTree(setOfFunctions, setOfTerminals, 3, "growf"),
-                        //treeGP.generateRandomTree(setOfFunctions, setOfTerminals, 3, "growf"),
+                        treeGP.generateRandomTree(setOfFunctions, setOfTerminals, 3, "growf"),
                         //treeGP.generateRandomTree(setOfFunctions, setOfTerminals, 3, "growf"),
                         //treeGP.generateRandomTree(setOfFunctions, setOfTerminals, 3, "growf")
                     ],
@@ -119,7 +121,7 @@ class CopyOfMuPlusLambdaESTreeGP {
                 //				println("the parents evaluated to : " + treeGP.evaluateTree(individualArr.get(i), problemParings,['x']))
                 for (j in 0..<(numChildren / numParents)) {
                     def treeToTweak =[[], [:], 0]
-                    1.times{
+                    2.times{
                         treeToTweak[0].add(treeGP.crossoverTrees(individualArr.get(randomParent.nextInt(numParents))[0][randomParent.nextInt(2)], individualArr.get(randomParent.nextInt(numParents))[0][randomParent.nextInt(2)]))
                     }
                     //treeToTweak[1] = defineHashMap(treeToTweak[0])
