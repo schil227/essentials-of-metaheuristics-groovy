@@ -13,80 +13,81 @@ class CopyOfMuPlusLambdaESTreeGP {
 
     public HashMap defineHashMap(arr){
         individualCount++
-        
+
         return [
-                    'id' : individualCount,
-                    'bullet_power' : arr[0].toString(),
-                    'aim_factor' :  arr[1].toString(),
-                    //'angle_diff' :  arr[2].toString(),
-                    //'distance' :  arr[3].toString()
-                ]
+            'id' : individualCount,
+            'point_value' : arr[0].toString(),
+            //'aim_factor' :  arr[1].toString(),
+            //'angle_diff' :  arr[2].toString(),
+            //'distance' :  arr[3].toString()
+        ]
     }
     def maximize(treeGP){
         this.treeGP = treeGP
         def individualArr = []
         def setOfFunctions = [
             new Add(),
-			new SinFunc(),
-			new Subtract(),
-			new ifGreaterThan(),
-			new ifLessThan(),
-			new Multiply(),
-			new MinFunc(),
-			new Divide(),
-			new MaxFunc(),
+            new SinFunc(),
+            new Subtract(),
+            new ifGreaterThan(),
+            new ifLessThan(),
+            new Multiply(),
+            new MinFunc(),
+            new Divide(),
+            new MaxFunc(),
             new AbsFunc(),
             new CosFunc(),
-			new Add(),
-			new SinFunc(),
-			new Subtract(),
-			new ifGreaterThan(),
-			new ifLessThan(),
-			new Multiply(),
-			new MinFunc(),
-			new Divide(),
-			new MaxFunc(),
-			new AbsFunc(),
-			new CosFunc()
+            new Add(),
+            new SinFunc(),
+            new Subtract(),
+            new ifGreaterThan(),
+            new ifLessThan(),
+            new Multiply(),
+            new MinFunc(),
+            new Divide(),
+            new MaxFunc(),
+            new AbsFunc(),
+            new CosFunc()
         ]
         def setOfTerminals = [
             1,
             -1,
             2,
             -2,
-			randomParent.nextDouble()*10,
-			randomParent.nextDouble()*10,
-           'e.getVelocity()',
-           'e.getDistance()',
-		   'predictedHeading',
-		   'predictedDistance',
-		   randomParent.nextDouble(),
-		   randomParent.nextDouble()
+            randomParent.nextDouble()*10,
+            randomParent.nextDouble()*10,
+            //           'e.getVelocity()',
+            //           'e.getDistance()',
+            //		   'predictedHeading',
+            //		   'predictedDistance',
+            randomParent.nextDouble(),
+            randomParent.nextDouble()
         ]
 
         println("making the initial individuals")
         def tmpNode
         numChildren.times {
-           tmpNode = [
-                    [
-                        treeGP.generateRandomTree(setOfFunctions, setOfTerminals, 3, "growf"),
-                        treeGP.generateRandomTree(setOfFunctions, setOfTerminals, 3, "growf"),
-                        //treeGP.generateRandomTree(setOfFunctions, setOfTerminals, 3, "growf"),
-                        //treeGP.generateRandomTree(setOfFunctions, setOfTerminals, 3, "growf")
-                    ],
-                    [:],
-                    0]
-//            println("gonna def the hashmap")
+            tmpNode = [
+                [
+                    treeGP.generateRandomTree(setOfFunctions, setOfTerminals, 3, "growf"),
+                    //treeGP.generateRandomTree(setOfFunctions, setOfTerminals, 3, "growf"),
+                    //treeGP.generateRandomTree(setOfFunctions, setOfTerminals, 3, "growf"),
+                    //treeGP.generateRandomTree(setOfFunctions, setOfTerminals, 3, "growf")
+                ],
+                [:],
+                0
+            ]
+            //            println("gonna def the hashmap")
             tmpNode[1] = defineHashMap(tmpNode[0])
-//            println("the hashmap be lookin like " + defineHashMap(tmpNode[0]))
-//            println("hashmaps class be lookin like " + tmpNode[1].class)
+            //            println("the hashmap be lookin like " + defineHashMap(tmpNode[0]))
+            //            println("hashmaps class be lookin like " + tmpNode[1].class)
             individualArr.add(tmpNode)
         }
-        
+
         println("finding the best")
 
         def best = individualArr[0][0]
-        def robotBuilder = new RobotBuilder("templates/MaxRiskEvolved.template")
+        def robotBuilder = new RobotBuilder("templates/HawkOnFireOS.template")
         def battleRunner = new BattleRunner("templates/battle.template")
         println("building the jar files")
         individualArr.each{ robot ->
@@ -96,42 +97,42 @@ class CopyOfMuPlusLambdaESTreeGP {
             //println("gonna build the battle file")
             //battleRunner.buildBattleFile(robot[1].id)
         }
-        
+
         println("running the battle!")
-		//battleRunner.buildBattleFile(individualArr[0][1].id)
+        //battleRunner.buildBattleFile(individualArr[0][1].id)
         //individualArr[0][2] = battleRunner.runBattle(individualArr[0][1].id)
         println("settin the bestQuality!")
         def bestQuality = 0//individualArr[0][2]
-		
+
 
         while(!treeGP.terminate(best, bestQuality)) {
             for (individual in individualArr) {
-				battleRunner.buildBattleFile(individual[1].id)
-				individual[2] = battleRunner.runBattle(individual[1].id)
+                battleRunner.buildBattleFile(individual[1].id)
+                individual[2] = battleRunner.runBattle(individual[1].id)
                 println("The score for "+individual[1].id + " was: " + individual[2])
                 if (individual[2]> bestQuality) {
                     best = individual
                     bestQuality =  individual[2]
                 }
             }
-			println("ran the battles, gonna sort the dudes. Best quality is "+bestQuality)
+            println("ran the battles, gonna sort the dudes. Best quality is "+bestQuality)
             individualArr = individualArr.sort{it[2]}.reverse()[0..<numParents]
-			println("finished sorting them booya.")// individualArr[0][2]= "+individualArr[0][2]+" and should be: "+bestQuality)
+            println("finished sorting them booya.")// individualArr[0][2]= "+individualArr[0][2]+" and should be: "+bestQuality)
             for (i in 0..<numParents) {
                 //				println("the parents evaluated to : " + treeGP.evaluateTree(individualArr.get(i), problemParings,['x']))
                 for (j in 0..<(numChildren / numParents)) {
                     def treeToTweak =[[], [:], 0]
-                    2.times{
-                        treeToTweak[0].add(treeGP.crossoverTrees(individualArr.get(randomParent.nextInt(numParents))[0][randomParent.nextInt(2)], individualArr.get(randomParent.nextInt(numParents))[0][randomParent.nextInt(2)]))
+                    1.times{
+                        treeToTweak[0].add(treeGP.crossoverTrees(individualArr.get(randomParent.nextInt(numParents))[0][0], individualArr.get(randomParent.nextInt(numParents))[0][0]))
                     }
                     //treeToTweak[1] = defineHashMap(treeToTweak[0])
-                    individualArr.add(treeToTweak)                        
+                    individualArr.add(treeToTweak)
                 }
             }
-        
+
             individualArr.each{individual ->
                 println("the id before defHashMap: " + individual[1].id)
-                individual[1] = defineHashMap(individual[0])    
+                individual[1] = defineHashMap(individual[0])
                 println("the id after defHashMap: " + individual[1].id)
                 robotBuilder.buildJarFile(individual[1])
             }

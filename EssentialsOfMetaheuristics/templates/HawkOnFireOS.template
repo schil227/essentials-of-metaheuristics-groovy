@@ -28,6 +28,7 @@ public class Individual_${id} extends AdvancedRobot
 	static Point2D.Double lastPosition;
 	static Point2D.Double myPos;
 	static double myEnergy;
+	static double pointValue = Math.abs(${point_value});
 	
 //- run -------------------------------------------------------------------------------------------------------------------------------------
 	public void run()
@@ -87,7 +88,7 @@ public class Individual_${id} extends AdvancedRobot
 				//	calculate the testPoint somewhere around the current position. 100 + 200*Math.random() proved to be good if there are
 				//	around 10 bots in a 1000x1000 field. but this needs to be limited this to distanceToTarget*0.8. this way the bot wont
 				//	run into the target (should mostly be the closest bot) 
-				testPoint = calcPoint(myPos, Math.min(distanceToTarget*0.8, 100 + 200*Math.random()), 2*Math.PI*Math.random());
+				testPoint = calcPoint(myPos, Math.min(distanceToTarget*0.8, 100 + pointValue/*200*/*Math.random()), 2*Math.PI*Math.random());
 				if(battleField.contains(testPoint) && evaluate(testPoint, addLast) < evaluate(nextDestination, addLast)) {
 					nextDestination = testPoint;
 				}
@@ -129,10 +130,14 @@ public class Individual_${id} extends AdvancedRobot
 			//		but this wasn't going to give me good results
 			// -	1 / p.distanceSq(en.pos) is just the normal anti gravity thing
 			if(en.live) {
-				eval += (${enemy_energy})*en.energy;
-				eval += (${my_energy})*myEnergy;
-				eval += (${angle_diff})*(calcAngle(myPos, p) - calcAngle(en.pos, p));
-				eval += (${distance})*p.distanceSq(en.pos);
+				/*eval += ({enemy_energy})*en.energy;
+				eval += ({my_energy})*myEnergy;
+				eval += ({angle_diff})*(calcAngle(myPos, p) - calcAngle(en.pos, p));
+				eval += ({distance})*p.distanceSq(en.pos);*/
+				eval += ((Math.cos((2.4977865150686798) - (1))) - (Math.sin((Math.max(((en.energy>1) ?2:0.35239658676162755),(myEnergy) - (-1))) * ((Math.abs(Math.sin(((0.7950812885249785<(calcAngle(myPos, p) - calcAngle(en.pos, p))) ?2:-2)))) - (Math.max(p.distanceSq(en.pos),Math.sin((Math.max(((en.energy>1) ?2:0.35239658676162755),(-1) - ((calcAngle(myPos, p) - calcAngle(en.pos, p))))) * ((Math.abs(Math.sin(((0.7950812885249785<(calcAngle(myPos, p) - calcAngle(en.pos, p))) ?2:-2)))) - (Math.max(en.energy,p.distanceSq(en.pos)))))))))))*en.energy;
+				eval += ((calcAngle(myPos, p) - calcAngle(en.pos, p)))*myEnergy;
+				eval += ((Math.max(((1>2) ?0.35239658676162755:(Math.max(((1>2) ?0.35239658676162755:Math.abs(Math.sin(((0.7950812885249785<(calcAngle(myPos, p) - calcAngle(en.pos, p))) ?2:-2)))),(myEnergy) - (7.218812776245008))) * ((Math.abs(1)) - (Math.max(en.energy,p.distanceSq(en.pos))))),(7.218812776245008) - (0.35239658676162755))) * ((Math.max(((1>2) ?0.35239658676162755:(Math.max(((1>2) ?0.35239658676162755:Math.abs(Math.sin(((0.7950812885249785<(calcAngle(myPos, p) - calcAngle(en.pos, p))) ?2:-2)))),(myEnergy) - (7.218812776245008))) * ((Math.abs(1)) - (Math.max(en.energy,p.distanceSq(en.pos))))),(7.218812776245008) - (0.35239658676162755))) * ((Math.abs(1)) - (Math.max(en.energy,p.distanceSq(en.pos))))))*(calcAngle(myPos, p) - calcAngle(en.pos, p));
+				eval += (Math.abs(((Math.max(0.35239658676162755,0.35239658676162755)<Math.abs(2)) ?2.4977865150686798:1)))*p.distanceSq(en.pos);
 			}
 		}
 		return eval;
@@ -159,23 +164,6 @@ public class Individual_${id} extends AdvancedRobot
 		
 		// locks the radar if there is only one opponent left
 		if(getOthers()==1)	setTurnRadarLeftRadians(getRadarTurnRemainingRadians());
-    		double absB;
-    		setTurnRightRadians(Math.cos(absB = e.getBearingRadians()));
-
-		enemyLog = String.valueOf((char)(int)Math.round(e.getVelocity() * Math.sin(e.getHeadingRadians() - (absB += getHeadingRadians())))).concat(enemyLog);
-		int i;
-    int index;
-    while ((index = enemyLog.indexOf(enemyLog.substring(0, matchLenght--), i = (int)(e.getDistance() / 12.5D))) < 0);
-    do
-    {
-      absB += Math.asin((byte)enemyLog.charAt(index--) / e.getDistance());
-      i--; } while (i > 0);
-
-    setTurnGunRightRadians(Utils.normalRelativeAngle(absB - getGunHeadingRadians()));
-
-    setFire(2.5D);
-
-    setTurnRadarLeft(getRadarTurnRemaining());
 		
 	}
 	

@@ -21,7 +21,7 @@ class RobotBuilder {
         def id = values['id']
         def fileNamePrefix = "Individual_${id}"
         def command = "jar -cf ${fileNamePrefix}.jar"
-        [".java", ".class", ".properties"].each { suffix ->
+        [".java", ".class", "\$MicroEnemy.class", ".properties"].each { suffix ->
             command += " ${robotPackage}/${fileNamePrefix}${suffix}"
         }
         println("makin the file!")
