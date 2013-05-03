@@ -18,10 +18,10 @@ class CopyOfMuPlusLambdaESTreeGP {
 		return [
 			'id' : individualCount,
 			//'point_value' : arr[0].toString(),
-			'my_energy' :  arr[0].toString(),
-			'enemy_energy' : arr[1].toString(),
-			'angle_diff' :  arr[2].toString(),
-			'distance' :  arr[3].toString()
+			'extra_angle' :  arr[0].toString()
+//			'enemy_energy' : arr[1].toString(),
+//			'angle_diff' :  arr[2].toString(),
+//			'distance' :  arr[3].toString()
 		]
 	}
 	def maximize(treeGP){
@@ -78,28 +78,25 @@ class CopyOfMuPlusLambdaESTreeGP {
 			randomParent.nextDouble()*10,
 			randomParent.nextGaussian(),
 			2*randomParent.nextDouble()-1,
-			'en.energy',
-			'myEnergy',
-			'(calcAngle(myPos, p) - calcAngle(en.pos, p))',
-			'calcAngle(myPos, p)',
-			'calcAngle(en.pos, p)',
-			'p.distanceSq(en.pos)',
-			'p.distance(myPos)',
-			'p.distance(en.pos)',
-			'myPos.distance(en.pos)',
+			'distanceToTarget',
+                        'distanceToTarget',
+                        'myEnergy',
+                        'myEnergy',
+                        'getGunTurnRemaining()',
+                        'getGunTurnRemaining()',
+                        'calcAngle(target.pos, myPos)',
+                        'calcAngle(target.pos, myPos)',
+                        'target.velocity',
+                        'target.velocity',
+                        'target.energy',
+                        'target.energy',
+                        'target.bearing',
+                        'target.bearing',
 			0,
 			randomParent.nextDouble()*10,
 			randomParent.nextGaussian(),
-			2*randomParent.nextDouble()-1,
-			'en.energy',
-			'myEnergy',
-			'(calcAngle(myPos, p) - calcAngle(en.pos, p))',
-			'calcAngle(myPos, p)',
-			'calcAngle(en.pos, p)',
-			'p.distanceSq(en.pos)',
-			'p.distance(myPos)',
-			'p.distance(en.pos)',
-			'myPos.distance(en.pos)'
+			2*randomParent.nextDouble()-1
+			
 		]
 
 		println("making the initial individuals")
@@ -108,9 +105,9 @@ class CopyOfMuPlusLambdaESTreeGP {
 			tmpNode = [
 				[
 					treeGP.generateRandomTree(setOfFunctions, setOfTerminals, 4, "growf"),
-					treeGP.generateRandomTree(setOfFunctions, setOfTerminals, 4, "growf"),
-					treeGP.generateRandomTree(setOfFunctions, setOfTerminals, 4, "growf"),
-					treeGP.generateRandomTree(setOfFunctions, setOfTerminals, 4, "growf"),
+//					treeGP.generateRandomTree(setOfFunctions, setOfTerminals, 4, "growf"),
+//					treeGP.generateRandomTree(setOfFunctions, setOfTerminals, 4, "growf"),
+//					treeGP.generateRandomTree(setOfFunctions, setOfTerminals, 4, "growf"),
 					//treeGP.generateRandomTree(setOfFunctions, setOfTerminals, 5, "growf")
 				],
 				[:],
@@ -164,8 +161,8 @@ class CopyOfMuPlusLambdaESTreeGP {
 				//				println("the parents evaluated to : " + treeGP.evaluateTree(individualArr.get(i), problemParings,['x']))
 				for (j in 0..<(numChildren / numParents)) {
 					def treeToTweak =[[], [:], 0]
-					4.times{
-						treeToTweak[0].add(treeGP.crossoverTrees(individualArr.get(randomParent.nextInt(numParents))[0][randomParent.nextInt(4)], individualArr.get(randomParent.nextInt(numParents))[0][randomParent.nextInt(4)]))
+					1.times{
+						treeToTweak[0].add(treeGP.crossoverTrees(individualArr.get(randomParent.nextInt(numParents))[0][0], individualArr.get(randomParent.nextInt(numParents))[0][0]))
 					}
 					//treeToTweak[1] = defineHashMap(treeToTweak[0])
 					individualArr.add(treeToTweak)

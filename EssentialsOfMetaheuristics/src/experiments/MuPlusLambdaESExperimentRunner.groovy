@@ -29,7 +29,7 @@ class MuPlusLambdaESExperimentRunner {
 
 	static main(args) {
 		def searchers = [
-			new CopyOfMuPlusLambdaESTreeGP(numParents : 4, numChildren : 8),
+			new CopyOfMuPlusLambdaESTreeGP(numParents : 4, numChildren : 12),
 
 		]
 		def problems = [

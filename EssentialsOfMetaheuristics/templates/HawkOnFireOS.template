@@ -73,7 +73,11 @@ public class Individual_${id} extends AdvancedRobot
 			//setFire( Math.min(Math.min(myEnergy/6d, 1300d/distanceToTarget), target.energy/3d) );
 		}
 		
-		setTurnGunRightRadians(Utils.normalRelativeAngle(calcAngle(target.pos, myPos) - getGunHeadingRadians()));
+		double extraAngle = ${extra_angle} % (Math.PI * .5);
+		
+		double headOnAngle = Utils.normalRelativeAngle(calcAngle(target.pos, myPos) - getGunHeadingRadians());
+		headOnAngle = (headOnAngle > 0 ? (headOnAngle + extraAngle) : (headOnAngle - extraAngle)); //if this doesnt add properly, calc angle then add lil angle
+		setTurnGunRightRadians(headOnAngle);
 		
 	//**** move *****************//
 		double distanceToNextDestination = myPos.distance(nextDestination);
@@ -136,8 +140,8 @@ public class Individual_${id} extends AdvancedRobot
 			// -	1 / p.distanceSq(en.pos) is just the normal anti gravity thing
 			if(en.live) {
 			
-				eval += Math.min((${enemy_energy}*en.energy)/(${my_energy}*myEnergy),2) * (1 + Math.abs(Math.cos(${angle_diff}*(calcAngle(myPos, p) - calcAngle(en.pos, p))))) /(${distance} * p.distanceSq(en.pos));
-				
+				eval += Math.min((p.distance(en.pos)*en.energy)/(7.011959745749604*myEnergy),2) * (1 + Math.abs(Math.cos(p.distance(en.pos)*(calcAngle(myPos, p) - calcAngle(en.pos, p))))) /(p.distance(en.pos) * p.distanceSq(en.pos));
+
 			}
 		}
 		return eval;
@@ -158,6 +162,7 @@ public class Individual_${id} extends AdvancedRobot
 		en.pos = calcPoint(myPos, e.getDistance(), getHeadingRadians() + e.getBearingRadians());
 		en.time = e.getTime();
 		en.bearing = e.getBearing();
+		en.velocity = e.getVelocity();
 		
 		// normal target selection: the one closer to you is the most dangerous so attack him
 		if(!target.live || e.getDistance() < myPos.distance(target.pos)) {
@@ -225,6 +230,7 @@ public class Individual_${id} extends AdvancedRobot
 		public boolean live;
 		public long time;
 		public double bearing;
+		public double velocity;
 		public boolean isUpdated(){
 			return (getTime() - time) < 10;
 		}
