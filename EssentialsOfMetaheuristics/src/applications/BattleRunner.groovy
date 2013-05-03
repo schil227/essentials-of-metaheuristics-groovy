@@ -21,8 +21,8 @@ class BattleRunner {
     }
 
     def buildBattleFile(id) {
-        println("building the battlefile")
-		println("adding robot " + id + "to the battle")
+        //println("building the battlefile")
+		//println("adding robot " + id + "to the battle")
 		File battleFile = new File("${robotDirectory}/evolve.battle")
         battleFile.delete()
         battleFile.createNewFile()
@@ -35,7 +35,7 @@ class BattleRunner {
 		linkJarFile(id)
         File battleFile = new File("${robotDirectory}/evolve.battle")
         def command = "${userHome}/robocode/robocode.sh -battle ${battleFile.absolutePath} -nodisplay"
-		println("gonna execute command " + command)
+		//println("gonna execute command " + command)
         def proc = command.execute(null, new File(robotDirectory))
         proc.waitFor()
         assert proc.exitValue() == 0
@@ -57,7 +57,7 @@ class BattleRunner {
     }
     
     def linkJarFile(id) {
-        println("linking jar file of robot "+id)
+       // println("linking jar file of robot "+id)
 		def robotDir = new File("${userHome}/robocode/robots/")
         def command = "ln -s ${robotDirectoryAbsolute}/Individual_${id}.jar ."
         def proc = command.execute(null, robotDir)

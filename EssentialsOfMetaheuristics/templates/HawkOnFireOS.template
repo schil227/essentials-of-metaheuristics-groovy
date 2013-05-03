@@ -5,6 +5,7 @@ import robocode.util.Utils;
 import java.awt.Color;
 import java.util.Hashtable;
 import java.util.Enumeration;
+import java.util.Iterator;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.Point2D;
 
@@ -28,7 +29,10 @@ public class Individual_${id} extends AdvancedRobot
 	static Point2D.Double lastPosition;
 	static Point2D.Double myPos;
 	static double myEnergy;
-	static double pointValue = Math.abs(${point_value});
+	//static double pointValue = Math.abs({point_value});
+	static double debugSmallestEval = Double.POSITIVE_INFINITY;
+	static double debugLargestEval = Double.NEGATIVE_INFINITY;
+	private int radarDirection=1;
 	
 //- run -------------------------------------------------------------------------------------------------------------------------------------
 	public void run()
@@ -36,8 +40,9 @@ public class Individual_${id} extends AdvancedRobot
 		setColors(Color.red,Color.white,Color.blue);
 		setAdjustGunForRobotTurn(true);
 		setAdjustRadarForGunTurn(true);
+		addCustomEvent(new RadarTurnCompleteCondition(this));
+		setTurnRadarRight(360);
 		
-		setTurnRadarRightRadians(Double.POSITIVE_INFINITY);
 		
 		nextDestination = lastPosition = myPos = new Point2D.Double(getX(), getY());
 		target = new MicroEnemy();
@@ -65,7 +70,7 @@ public class Individual_${id} extends AdvancedRobot
 	//**** gun ******************//
 		// HeadOnTargeting there's nothing I can say about this
 		if(getGunTurnRemaining() == 0 && myEnergy > 1) {
-			setFire( Math.min(Math.min(myEnergy/6d, 1300d/distanceToTarget), target.energy/3d) );
+			//setFire( Math.min(Math.min(myEnergy/6d, 1300d/distanceToTarget), target.energy/3d) );
 		}
 		
 		setTurnGunRightRadians(Utils.normalRelativeAngle(calcAngle(target.pos, myPos) - getGunHeadingRadians()));
@@ -88,7 +93,7 @@ public class Individual_${id} extends AdvancedRobot
 				//	calculate the testPoint somewhere around the current position. 100 + 200*Math.random() proved to be good if there are
 				//	around 10 bots in a 1000x1000 field. but this needs to be limited this to distanceToTarget*0.8. this way the bot wont
 				//	run into the target (should mostly be the closest bot) 
-				testPoint = calcPoint(myPos, Math.min(distanceToTarget*0.8, 100 + pointValue/*200*/*Math.random()), 2*Math.PI*Math.random());
+				testPoint = calcPoint(myPos, Math.min(distanceToTarget*0.8, 100 + 168*Math.random()), 2*Math.PI*Math.random());
 				if(battleField.contains(testPoint) && evaluate(testPoint, addLast) < evaluate(nextDestination, addLast)) {
 					nextDestination = testPoint;
 				}
@@ -130,14 +135,9 @@ public class Individual_${id} extends AdvancedRobot
 			//		but this wasn't going to give me good results
 			// -	1 / p.distanceSq(en.pos) is just the normal anti gravity thing
 			if(en.live) {
-				/*eval += ({enemy_energy})*en.energy;
-				eval += ({my_energy})*myEnergy;
-				eval += ({angle_diff})*(calcAngle(myPos, p) - calcAngle(en.pos, p));
-				eval += ({distance})*p.distanceSq(en.pos);*/
-				eval += ((Math.cos((2.4977865150686798) - (1))) - (Math.sin((Math.max(((en.energy>1) ?2:0.35239658676162755),(myEnergy) - (-1))) * ((Math.abs(Math.sin(((0.7950812885249785<(calcAngle(myPos, p) - calcAngle(en.pos, p))) ?2:-2)))) - (Math.max(p.distanceSq(en.pos),Math.sin((Math.max(((en.energy>1) ?2:0.35239658676162755),(-1) - ((calcAngle(myPos, p) - calcAngle(en.pos, p))))) * ((Math.abs(Math.sin(((0.7950812885249785<(calcAngle(myPos, p) - calcAngle(en.pos, p))) ?2:-2)))) - (Math.max(en.energy,p.distanceSq(en.pos)))))))))))*en.energy;
-				eval += ((calcAngle(myPos, p) - calcAngle(en.pos, p)))*myEnergy;
-				eval += ((Math.max(((1>2) ?0.35239658676162755:(Math.max(((1>2) ?0.35239658676162755:Math.abs(Math.sin(((0.7950812885249785<(calcAngle(myPos, p) - calcAngle(en.pos, p))) ?2:-2)))),(myEnergy) - (7.218812776245008))) * ((Math.abs(1)) - (Math.max(en.energy,p.distanceSq(en.pos))))),(7.218812776245008) - (0.35239658676162755))) * ((Math.max(((1>2) ?0.35239658676162755:(Math.max(((1>2) ?0.35239658676162755:Math.abs(Math.sin(((0.7950812885249785<(calcAngle(myPos, p) - calcAngle(en.pos, p))) ?2:-2)))),(myEnergy) - (7.218812776245008))) * ((Math.abs(1)) - (Math.max(en.energy,p.distanceSq(en.pos))))),(7.218812776245008) - (0.35239658676162755))) * ((Math.abs(1)) - (Math.max(en.energy,p.distanceSq(en.pos))))))*(calcAngle(myPos, p) - calcAngle(en.pos, p));
-				eval += (Math.abs(((Math.max(0.35239658676162755,0.35239658676162755)<Math.abs(2)) ?2.4977865150686798:1)))*p.distanceSq(en.pos);
+			
+				eval += Math.min((${enemy_energy}*en.energy)/(${my_energy}*myEnergy),2) * (1 + Math.abs(Math.cos(${angle_diff}*(calcAngle(myPos, p) - calcAngle(en.pos, p))))) /(${distance} * p.distanceSq(en.pos));
+				
 			}
 		}
 		return eval;
@@ -156,6 +156,8 @@ public class Individual_${id} extends AdvancedRobot
 		en.energy = e.getEnergy();
 		en.live = true;
 		en.pos = calcPoint(myPos, e.getDistance(), getHeadingRadians() + e.getBearingRadians());
+		en.time = e.getTime();
+		en.bearing = e.getBearing();
 		
 		// normal target selection: the one closer to you is the most dangerous so attack him
 		if(!target.live || e.getDistance() < myPos.distance(target.pos)) {
@@ -172,6 +174,28 @@ public class Individual_${id} extends AdvancedRobot
 		enemies.get(e.getName()).live = false;
 	}
 	
+	private void sweep() {
+		double maxBearingAbs=0, maxBearing=0;
+ 		int scannedBots=0;
+		Iterator iterator = enemies.values().iterator();
+			while(iterator.hasNext()) {
+    		MicroEnemy tmp = (MicroEnemy)iterator.next();
+    			if (tmp!=null && tmp.isUpdated()) {
+      				double bearing = Utils.normalRelativeAngle(getHeading() + tmp.bearing - getRadarHeading());
+      				if (Math.abs(bearing)>maxBearingAbs) { 
+        				maxBearingAbs=Math.abs(bearing); 
+        					maxBearing=bearing; 
+      				}
+      				scannedBots++;
+    			}
+  			}
+  		double radarTurn=180*radarDirection;
+ 		if (scannedBots==getOthers()) 		
+    		radarTurn=maxBearing+sign(maxBearing)*22.5; 
+			setTurnRadarRight(radarTurn);
+			radarDirection=sign(radarTurn);
+	}
+	
 //- math ------------------------------------------------------------------------------------------------------------------------------------
 	private static Point2D.Double calcPoint(Point2D.Double p, double dist, double ang) {
 		return new Point2D.Double(p.x + dist*Math.sin(ang), p.y + dist*Math.cos(ang));
@@ -181,10 +205,28 @@ public class Individual_${id} extends AdvancedRobot
 		return Math.atan2(p2.x - p1.x, p2.y - p1.y);
 	}
 	
+	public void onCustomEvent(CustomEvent e) {
+		if (e.getCondition() instanceof RadarTurnCompleteCondition) sweep();
+	}
+	
+	public static int sign(double n) {
+		if (n != n) throw new IllegalArgumentException("Invalid Argument");
+		if (n == 0) return 0;
+    	n *= Double.POSITIVE_INFINITY;
+    	if (n == Double.POSITIVE_INFINITY) return +1;
+    	if (n == Double.NEGATIVE_INFINITY) return -1;
+		//To make the compiler happy.
+		throw new IllegalArgumentException("Oh great, what did you do this time?");
+	}
 //- microEnemy ------------------------------------------------------------------------------------------------------------------------------
 	public class MicroEnemy {
 		public Point2D.Double pos;
 		public double energy;
 		public boolean live;
+		public long time;
+		public double bearing;
+		public boolean isUpdated(){
+			return (getTime() - time) < 10;
+		}
 	}
 }
